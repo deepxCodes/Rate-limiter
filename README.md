@@ -14,7 +14,6 @@ The dashboard (`frontend/`) is a retro-desktop UI that talks to the real API.
       test/              unit tests (no database needed)
       scripts/           concurrency-check.js (needs running server + MongoDB)
     frontend/            index.html, css/, js/  (served by Express at /)
-    docs/                VIVA.md, Q1_OUTLINE.md, postman collection
 
 ## Setup (Windows / macOS / Linux)
 
