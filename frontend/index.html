@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RATELIMIT.OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Silkscreen&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand"><span class="logo" aria-hidden="true">▚▞</span>RATELIMIT<em>.OS</em></div>
+  <div class="bar-right">
+    <span class="chip" id="dbChip"><i class="led"></i><span id="dbText">MONGODB: CONNECTING</span></span>
+    <time id="clock">--:--:--</time>
+  </div>
+</header>
+
+<main class="desktop">
+  <nav class="icons" aria-label="Desktop">
+    <button class="icon" data-open="limiter"><span>▦</span>Dashboard</button>
+    <button class="icon" data-open="tester"><span>▶</span>API Tester</button>
+    <button class="icon" data-open="db"><span>⛁</span>Database</button>
+    <button class="icon" data-open="docs"><span>?</span>Docs</button>
+  </nav>
+
+  <section class="win" id="win-limiter" style="grid-area: lim">
+    <div class="titlebar"><span>limiter.exe</span><span class="btns"><button data-act="min" aria-label="Minimize">_</button><button data-act="close" aria-label="Close">×</button></span></div>
+    <div class="body">
+      <div class="meter">
+        <div class="count">
+          <div class="lbl">REQUESTS USED</div>
+          <div class="big"><b id="used">--</b><span>/</span><em id="max">--</em></div>
+          <div class="segs" id="segs"></div>
+          <div class="rem">REMAINING <b id="remaining">--</b></div>
+        </div>
+        <div class="ring">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="track" cx="60" cy="60" r="52"/>
+            <circle class="prog" id="prog" cx="60" cy="60" r="52"/>
+          </svg>
+          <div class="ringtxt"><b id="secs">--</b><small>SEC TO RESET</small></div>
+        </div>
+      </div>
+      <p class="rule" id="rule">FIXED WINDOW COUNTER · KEY = CLIENT IP</p>
+    </div>
+  </section>
+
+  <section class="win" id="win-tester" style="grid-area: test">
+    <div class="titlebar"><span>api_tester.exe</span><span class="btns"><button data-act="min" aria-label="Minimize">_</button><button data-act="close" aria-label="Close">×</button></span></div>
+    <div class="body tester">
+      <button class="btn-primary" id="send">SEND REQUEST →</button>
+      <div class="status" id="status" data-code="idle"><b>---</b><span>AWAITING INPUT</span></div>
+      <p class="hint" id="hint">GET /api/test</p>
+    </div>
+  </section>
+
+  <section class="win" id="win-viz" style="grid-area: viz">
+    <div class="titlebar"><span>request_viz.exe</span><span class="btns"><button data-act="min" aria-label="Minimize">_</button><button data-act="close" aria-label="Close">×</button></span></div>
+    <div class="body">
+      <div class="viz" id="viz"><div class="scan"></div><div class="blocks" id="blocks"></div></div>
+      <div class="legend"><i class="s200"></i>200 OK <i class="s429"></i>429 BLOCKED <i class="s503"></i>503 DB DOWN <i class="s0"></i>NO REPLY</div>
+    </div>
+  </section>
+
+  <section class="win" id="win-console" style="grid-area: con">
+    <div class="titlebar"><span>console.log</span><span class="btns"><button data-act="min" aria-label="Minimize">_</button><button data-act="close" aria-label="Close">×</button></span></div>
+    <div class="body"><pre class="term" id="console" aria-live="polite"></pre></div>
+  </section>
+
+  <section class="win float" id="win-db" hidden>
+    <div class="titlebar"><span>database.sys</span><span class="btns"><button data-act="close" aria-label="Close">×</button></span></div>
+    <div class="body">
+      <dl class="kv">
+        <dt>STATE</dt><dd id="dbState">--</dd>
+        <dt>DATABASE</dt><dd id="dbName">--</dd>
+        <dt>COLLECTION</dt><dd id="dbColl">--</dd>
+        <dt>INDEXES</dt><dd>unique(clientId, windowStart)<br>TTL(expiresAt, 0 s)</dd>
+        <dt>API</dt><dd id="apiState">--</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="win float" id="win-docs" hidden>
+    <div class="titlebar"><span>readme.txt</span><span class="btns"><button data-act="close" aria-label="Close">×</button></span></div>
+    <div class="body docs">
+      <p>Each client IP may call <code>GET /api/test</code> a fixed number of times per window. The counter is one MongoDB document per IP per window.</p>
+      <p><b>200</b> request counted · <b>429</b> limit reached, nothing counted · <b>503</b> MongoDB unavailable, limit cannot be enforced.</p>
+      <p>Counters and the countdown come from the <code>RateLimit-*</code> response headers and <code>/api/health</code>.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="ticker" aria-hidden="true"><div class="track" id="track"></div></footer>
+<script>
+    window.API_BASE =
+        "https://backwash-handcraft-unlimited.ngrok-free.dev";
+</script>
+
+<script src="js/app.js"></script>
+</body>
+</html>
