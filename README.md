@@ -88,6 +88,4 @@ Headers on `/api/test`: `RateLimit-Limit`, `RateLimit-Remaining`, `RateLimit-Res
     db.rateLimits.getIndexes()          // unique + TTL (expireAfterSeconds: 0)
     db.rateLimits.find()                // one document per IP per window
 
-## Q1 (written answer)
 
-Not written here on purpose. See `docs/Q1_OUTLINE.md` for study questions, then write it yourself.
