@@ -1,6 +1,6 @@
 'use strict';
 
-const API_BASE = window.API_BASE || '';
+const API_BASE = 'https://rate-limiter-he53.onrender.com';
 const $ = (sel) => document.querySelector(sel);
 const RING = 326.7;
 
