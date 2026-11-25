@@ -7,23 +7,37 @@ const { createApiRouter } = require('./routes/api');
 function createApp({ config, store }) {
   const app = express();
   app.set('trust proxy', config.trustProxy);
-  if (config.corsOrigin) {
-    app.use((req, res, next) => {
-        res.set({
-            'Access-Control-Allow-Origin': config.corsOrigin,
-            'Access-Control-Allow-Methods': 'GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, ngrok-skip-browser-warning',
-            'Access-Control-Expose-Headers':
-                'RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, Retry-After',
-        });
+  const allowedOrigins = (config.corsOrigin || '')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean);
 
-        if (req.method === 'OPTIONS') {
-            return res.sendStatus(204);
-        }
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
 
-        next();
-    });
-}
+    if (origin && allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Vary', 'Origin');
+        res.setHeader(
+            'Access-Control-Allow-Methods',
+            'GET, POST, PUT, DELETE, OPTIONS'
+        );
+        res.setHeader(
+            'Access-Control-Allow-Headers',
+            'Content-Type, Authorization, ngrok-skip-browser-warning'
+        );
+        res.setHeader(
+            'Access-Control-Expose-Headers',
+            'RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, Retry-After'
+        );
+    }
+
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+    }
+
+    next();
+});
 
   const rateLimiter = createRateLimiter({
     store,

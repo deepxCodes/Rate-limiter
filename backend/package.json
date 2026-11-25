@@ -11,8 +11,11 @@
     "test:integration": "node --test test/concurrency.integration.test.js",
     "concurrency": "node scripts/concurrency-check.js"
   },
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "mongoose": "^8.8.0"
